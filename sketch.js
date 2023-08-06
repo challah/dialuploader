@@ -24,8 +24,6 @@ function preload() {
 
 let instance1, instance2, instance3, instance4;
 
-
-
 function resizeImage(image) {
   // Resize based on screen size
   if (windowWidth < 700) {
@@ -344,8 +342,9 @@ let sketch4 = function (p4) {
     images[1].updatePixels();
 
     // Initialize current state with transparent pixels
-    currentState = new Uint8ClampedArray(4 * globalImage.width * globalImage.height);
+    // currentState = new Uint8ClampedArray(4 * globalImage.width * globalImage.height);
 
+    p4.loop();
     imagesReady = true;
     console.log('Ready!')
   };
