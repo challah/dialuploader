@@ -6,17 +6,33 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0" />
   <title>Dial-Up Loader</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon/favicon-16x16.png">
-  <link rel="manifest" href="./images/favicon/site.webmanifest">
-  <meta name="author" content="Jordanne Chan">
-  <meta name="description" content="The dial-up loader simulates image rendering and the user experience of the early Internet era. Relive the days when patience and being in a state of 'incompletion' was key in digital media consumption.">
-  <meta name="robots" content="index, follow">
-  <meta property="og:title" content="Dial-Up Loader">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://jordannechan.ca/dialuploader">
+  <link rel="apple-touch-icon"
+        sizes="180x180"
+        href="./images/apple-touch-icon.png">
+  <link rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="./images/favicon/favicon-32x32.png">
+  <link rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="./images/favicon/favicon-16x16.png">
+  <link rel="manifest"
+        href="./images/favicon/site.webmanifest">
+  <meta name="author"
+        content="Jordanne Chan">
+  <meta name="description"
+        content="The dial-up loader simulates image rendering and the user experience of the early Internet era. Relive the days when patience and being in a state of 'incompletion' was key in digital media consumption.">
+  <meta name="robots"
+        content="index, follow">
+  <meta property="og:title"
+        content="Dial-Up Loader">
+  <meta property="og:locale"
+        content="en_US">
+  <meta property="og:type"
+        content="website">
+  <meta property="og:url"
+        content="https://jordannechan.ca/dialuploader">
   <link rel="stylesheet"
         type="text/css"
         href="style.css" />
@@ -27,70 +43,80 @@
   <div class="button-container">
     <button id="connect-button">Play Dial-Up Sound</button>
     <button id="reload-button">Reload Images</button>
+    <div id="file-container">
+      <!-- <input type="file" id="file-input" /> -->
+    </div>
+
   </div>
   <div class="window-container-container">
-  <div class="window-container"
-       id="window-container">
-    <div class="window">
-      <div class="title-bar">
-        <div class="title-bar-text">cat.jpg</div>
-        <div class="title-bar-controls">
-          <button aria-label="Minimize"></button>
-          <button aria-label="Maximize"></button>
-          <button aria-label="Close"></button>
+    <div class="window-container"
+         id="window-container">
+      <div class="window">
+        <div class="title-bar">
+          <div class="title-bar-text">cat.jpg</div>
+          <div class="title-bar-controls">
+            <button aria-label="Minimize"></button>
+            <button aria-label="Maximize"></button>
+            <button aria-label="Close"></button>
+          </div>
+        </div>
+        <div class="window-body"
+             id="p5-container1">
         </div>
       </div>
-      <div class="window-body"
-           id="p5-container1">
+
+      <div class="window">
+        <div class="title-bar">
+          <div class="title-bar-text">cat.jpg</div>
+          <div class="title-bar-controls">
+            <button aria-label="Minimize"></button>
+            <button aria-label="Maximize"></button>
+            <button aria-label="Close"></button>
+          </div>
+        </div>
+        <div class="window-body"
+             id="p5-container2">
+        </div>
+      </div>
+
+      <div class="window">
+        <div class="title-bar">
+          <div class="title-bar-text">cat.jpg</div>
+          <div class="title-bar-controls">
+            <button aria-label="Minimize"></button>
+            <button aria-label="Maximize"></button>
+            <button aria-label="Close"></button>
+          </div>
+        </div>
+        <div class="window-body"
+             id="p5-container3">
+        </div>
+      </div>
+
+      <div class="window">
+        <div class="title-bar">
+          <div class="title-bar-text">cat.jpg</div>
+          <div class="title-bar-controls">
+            <button aria-label="Minimize"></button>
+            <button aria-label="Maximize"></button>
+            <button aria-label="Close"></button>
+          </div>
+        </div>
+        <div class="window-body"
+             id="p5-container4">
+        </div>
       </div>
     </div>
 
-    <div class="window">
-      <div class="title-bar">
-        <div class="title-bar-text">cat.jpg</div>
-        <div class="title-bar-controls">
-          <button aria-label="Minimize"></button>
-          <button aria-label="Maximize"></button>
-          <button aria-label="Close"></button>
-        </div>
-      </div>
-      <div class="window-body"
-           id="p5-container2">
-      </div>
-    </div>
 
-    <div class="window">
-      <div class="title-bar">
-        <div class="title-bar-text">cat.jpg</div>
-        <div class="title-bar-controls">
-          <button aria-label="Minimize"></button>
-          <button aria-label="Maximize"></button>
-          <button aria-label="Close"></button>
-        </div>
-      </div>
-      <div class="window-body"
-           id="p5-container3">
-      </div>
-    </div>
-
-    <div class="window">
-      <div class="title-bar">
-        <div class="title-bar-text">cat.jpg</div>
-        <div class="title-bar-controls">
-          <button aria-label="Minimize"></button>
-          <button aria-label="Maximize"></button>
-          <button aria-label="Close"></button>
-        </div>
-      </div>
-      <div class="window-body"
-           id="p5-container4">
-      </div>
-
-    </div>
   </div>
-
-
-</div>
+  <footer>
+    <a href="https://www.twitch.tv/sableraph"><img src="birb_button_88x31.gif"
+         alt="Birb's Nest Button"
+         id="birb-button" /></a> 
+         <br>
+         <a href="https://github.com/challah/dialuploader">Repo</a>
+  </footer>
 
   <script src="sketch.js"></script>
 </body>

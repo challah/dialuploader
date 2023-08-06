@@ -19,12 +19,32 @@ setTimeout(function () {
 let globalImage;
 
 function preload() {
-  globalImage = loadImage('hualienmao.png');
+  globalImage = loadImage('hualienmao.jpg');
 }
 
 let instance1, instance2, instance3, instance4;
 
+
+
+function resizeImage(image) {
+  // Resize based on screen size
+  if (windowWidth < 700) {
+    let newWidth = (windowWidth * 2) / 5;
+    let newHeight = (newWidth / image.width) * image.height;
+    image.resize(newWidth, newHeight);
+  } else if (image.width > 512) { // Resize if width is greater than 512
+    let newHeight = (512 / image.width) * image.height;
+    image.resize(512, newHeight);
+  }
+}
+
 function setup() {
+  let fileInput = createFileInput(handleFile);
+  fileInput.parent('file-container');
+
+  // resize image
+  resizeImage(globalImage);
+
   // initialize all instances from setup to make sure the preload finished
   instance1 = new p5(sketch1, 'p5-container1')
   instance2 = new p5(sketch2, 'p5-container2');
@@ -32,13 +52,36 @@ function setup() {
   instance4 = new p5(sketch4, 'p5-container4');
 }
 
+function handleFile(file) {
+  if (file.type === 'image') {
+    globalImage = loadImage(file.data, function () {
+      // Resize the image if needed
+      resizeImage(globalImage);
+
+      // Reset sketches to start loading the new image
+      instance1.resetSketch();
+      instance2.resetSketch();
+      instance3.resetSketch();
+      instance4.resetSketch();
+
+       // Update title bars with the file name
+       let titleBars = document.querySelectorAll('.title-bar-text');
+       titleBars.forEach((titleBar) => {
+         titleBar.innerText = file.name;
+       });
+    });
+  } else {
+    console.log('Not an image file!');
+  }
+}
+
 
 // Interlaced loading
 // ---------------------------------- 
 let sketch1 = function (p) {
   let currentRow = 0;
-  let dataPerFrame = 128; 
-  let frameDuration = 1000 * dataPerFrame / dialUpSpeed; // milliseconds per frame
+  let dataPerFrame = 2; 
+  let frameDuration = 200 * dataPerFrame / dialUpSpeed; // milliseconds per frame
 
   p.setup = function () {
     let canvas = p.createCanvas(globalImage.width, globalImage.height);
@@ -73,6 +116,7 @@ let sketch1 = function (p) {
   };
 
   p.resetSketch = function () {
+    p.resizeCanvas(globalImage.width, globalImage.height);
     currentRow = 0; // Reset the current row
     p.loadPixels();
     for (let i = 0; i < p.pixels.length; i++) {
@@ -141,6 +185,7 @@ let sketch2 = function (p2) {
     }
   };
   p2.resetSketch = function () {
+    p2.resizeCanvas(globalImage.width, globalImage.height);
     currentPass = 20; // Start by skipping every nth pixel
     p2.loop(); // Restart the draw loop
   };
@@ -191,6 +236,7 @@ let sketch3 = function (p3) {
   };
 
   p3.resetSketch = function () {
+    p3.resizeCanvas(globalImage.width, globalImage.height);
     blockSize = Math.floor(p3.width / 5); // Make sure the block size is an integer
     numRows = 5;
     numCols = 5;
@@ -209,15 +255,58 @@ let sketch4 = function (p4) {
   let currentState;
   let pass = 0;
   let wipeHeight = 0;
-  let speeds = [5, 8, 4];
+  let speeds = [1, 3, 2];
   let dataPerFrame = 1024;
   let frameDuration = 1000 * dataPerFrame / dialUpSpeed;
-
+  let imagesReady = false;
 
   p4.setup = function () {
     p4.createCanvas(globalImage.width, globalImage.height);
     p4.pixelDensity(1);
     p4.frameRate(frameDuration);
+    p4.resetSketch();
+    
+  };
+
+  p4.draw = function () {
+    if (globalImage.width > 0 && imagesReady) { // Check if the image is loaded
+      let currentImg = images[pass];
+      currentImg.loadPixels();
+
+      for (let y = 0; y < wipeHeight; y++) {
+        for (let x = 0; x < p4.width; x++) {
+          let loc = (y * p4.width + x) * 4;
+          currentState[loc] = currentImg.pixels[loc];
+          currentState[loc + 1] = currentImg.pixels[loc + 1];
+          currentState[loc + 2] = currentImg.pixels[loc + 2];
+          currentState[loc + 3] = 255;
+        }
+      }
+
+      p4.loadPixels();
+      for (let i = 0; i < p4.pixels.length; i++) {
+        p4.pixels[i] = currentState[i];
+      }
+      p4.updatePixels();
+
+      wipeHeight += speeds[pass];
+      if (wipeHeight > p4.height) {
+        wipeHeight = 0;
+        pass++;
+        if (pass > 2) p4.noLoop();
+      }
+    }
+  };
+
+  p4.resetSketch = function () {
+    imagesReady = false
+    p4.resizeCanvas(globalImage.width, globalImage.height);
+    // Reset the loading pass and wipe height
+    pass = 0;
+    wipeHeight = 0;
+
+    currentState = new Uint8ClampedArray(4 * globalImage.width * globalImage.height);
+    images.length = 0; // Clear the array of images
 
     // Create and store different states of the image
     images[0] = p4.createImage(globalImage.width, globalImage.height); // Grayscale
@@ -256,46 +345,9 @@ let sketch4 = function (p4) {
 
     // Initialize current state with transparent pixels
     currentState = new Uint8ClampedArray(4 * globalImage.width * globalImage.height);
-  };
 
-  p4.draw = function () {
-    if (globalImage.width > 0) { // Check if the image is loaded
-      let currentImg = images[pass];
-      currentImg.loadPixels();
-
-      for (let y = 0; y < wipeHeight; y++) {
-        for (let x = 0; x < p4.width; x++) {
-          let loc = (y * p4.width + x) * 4;
-          currentState[loc] = currentImg.pixels[loc];
-          currentState[loc + 1] = currentImg.pixels[loc + 1];
-          currentState[loc + 2] = currentImg.pixels[loc + 2];
-          currentState[loc + 3] = 255;
-        }
-      }
-
-      p4.loadPixels();
-      for (let i = 0; i < p4.pixels.length; i++) {
-        p4.pixels[i] = currentState[i];
-      }
-      p4.updatePixels();
-
-      wipeHeight += speeds[pass];
-      if (wipeHeight > p4.height) {
-        wipeHeight = 0;
-        pass++;
-        if (pass > 2) p4.noLoop();
-      }
-    }
-  };
-
-  p4.resetSketch = function () {
-    // Reset the loading pass and wipe height
-    pass = 0;
-    wipeHeight = 0;
-
-    // Initialize current state with transparent pixels
-    currentState = new Uint8ClampedArray(4 * globalImage.width * globalImage.height);
-    p4.loop();
+    imagesReady = true;
+    console.log('Ready!')
   };
 
 };
